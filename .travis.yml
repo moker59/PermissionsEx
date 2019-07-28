@@ -1,3 +1,4 @@
+dist: trusty
 language: java
 jdk:
     - oraclejdk8
@@ -10,10 +11,20 @@ services:
     - postgresql
 before_script:
       - psql -c 'create database pextest;' -U postgres
-      - mysql -u root -c 'create database pextest;'
+      - mysql -u root -e 'create database pextest;'
 script:
-    - mvn -Dninja.leaping.permissionsex.backend.sql.testDatabases=mysql!jdbc:mysql://localhost/pextest?user=root;postgres!jdbc:postgresql://localhost/pextest?user=postgres
+    - mvn install
 
 cache:
     directories:
         - $HOME/.m2
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $GH_TOKEN
+  file_glob: true
+  file:
+    - "permissionsex-bukkit/target/*.jar"
+  on:
+    tags: true
