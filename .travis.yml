@@ -14,3 +14,13 @@ jobs:
   include:
     - stage: deploy
       script: ./gradlew publish
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $GH_TOKEN
+  file_glob: true
+  file:
+    - "permissionsex-bukkit/target/*.jar"
+  on:
+    all_branches: true
